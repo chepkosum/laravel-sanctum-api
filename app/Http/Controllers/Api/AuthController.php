@@ -81,7 +81,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Get user profile data.
      * @param NA
      * @return JSONResponse
      */
@@ -102,11 +102,27 @@ class AuthController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
+   /**
+     * Logout user.
+     * @param NA
+     * @return JSONResponse
      */
-    public function destroy(string $id)
+    public function logout()
     {
-        //
+        try {
+           $user =  Auth::user();
+
+           if($user){
+            $user->currentAccessToken()->delete();
+           return  ResponseHelper::success(message: 'User Logged Out!', statusCode:200);
+           }
+           return  ResponseHelper::error(message: 'Unable to logout! Invalid Token' , statusCode:400);
+
+        } catch (Exception $e) {
+            \Log::error('Unable to Logout : ' . $e->getMessage() . ' - Line no.' . $e->getLine());
+           return  ResponseHelper::error(message: 'Unable to logout!' . $e->getMessage(), statusCode:500);
+
+        }
     }
+
 }
