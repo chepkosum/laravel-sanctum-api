@@ -82,10 +82,24 @@ class AuthController extends Controller
 
     /**
      * Update the specified resource in storage.
+     * @param NA
+     * @return JSONResponse
      */
-    public function update(Request $request, string $id)
+    public function userProfile()
     {
-        //
+        try {
+           $user =  Auth::user();
+
+           if($user){
+           return  ResponseHelper::success(message: 'User Profile Fetched!', data:$user, statusCode:200);
+           }
+           return  ResponseHelper::error(message: 'Unable to Fetch user Profile! Invalid Token' , statusCode:400);
+
+        } catch (Exception $e) {
+            \Log::error('Unable to Fetch User Profile : ' . $e->getMessage() . ' - Line no.' . $e->getLine());
+           return  ResponseHelper::error(message: 'Unable to Fetch user Profile!' . $e->getMessage(), statusCode:500);
+
+        }
     }
 
     /**
